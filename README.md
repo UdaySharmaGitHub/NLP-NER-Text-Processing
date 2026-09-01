@@ -1,380 +1,197 @@
 # NLP | NER | Text-Processing | Data Extraction
 
-A comprehensive Python project for Natural Language Processing (NLP), Named Entity Recognition (NER), and Optical Character Recognition (OCR) using state-of-the-art transformer models and machine learning techniques.
+A Python project for Natural Language Processing (NLP), Named Entity Recognition (NER), and Optical Character Recognition (OCR) using state-of-the-art transformer models. The focus is on extracting structured fields from medical certificates and sick notes, with an exploration and benchmarking of multiple model architectures.
+
+---
 
 ## 🎯 Project Overview
 
-This is a comprehensive exploration and implementation project that investigates **all different types of state-of-the-art models available on the internet** for advanced text processing and intelligent data extraction from various document formats.
+This project investigates different approaches to intelligent data extraction from document images and PDFs — comparing OCR-based NER pipelines, layout-aware transformers, and OCR-free vision models.
 
-### Core Functionalities:
-- **NER (Named Entity Recognition)**: Extract entities (persons, locations, organizations, etc.) from text
-- **NLP (Natural Language Processing)**: Text classification, sentiment analysis, and text understanding
-- **OCR (Optical Character Recognition)**: Extract text from images using advanced OCR models
-- **Document Processing**: Extract structured data from PDFs, scanned documents, and complex layouts
-- **Multimodal Analysis**: Process images, PDFs, and other document types with vision-language models
+**Core tasks:**
+- **NER**: Extract named entities (persons, dates, diagnoses, medications) from text
+- **Document QA**: Answer field-extraction questions about document images
+- **OCR**: Convert scanned documents and PDFs to searchable text
+- **Layout Understanding**: Reason about where text sits on the page (bounding boxes)
 
-### Models & Technologies to Explore:
-This repository will feature implementations and comparisons of:
-- **Transformer Models**: BERT, RoBERTa, XLM-RoBERTa, DistilBERT, ELECTRA
-- **Vision Models**: ViT (Vision Transformer), CLIP, LayoutLM, DocTR
-- **Language Models**: GPT-based models, T5, BART, Seq2Seq architectures
-- **OCR Solutions**: Tesseract, PaddleOCR, EasyOCR, Keras-OCR
-- **Document AI**: Donut (Document Understanding Transformer), Nougat (PDF to Markdown)
-- **Multimodal Models**: BLIP, LLaVA for image-text understanding
-- **Specialized Models**: Domain-specific models for legal docs, invoices, forms, tables
+---
 
-## ✨ Features
+## 🤗 Implemented Models
 
-- 🤗 **Hugging Face Transformers**: Pre-trained transformer models (XLM-RoBERTa, BERT, etc.)
-- 🔤 **spaCy Integration**: Industrial-strength NLP processing
-- 👁️ **Multiple OCR Engines**: pytesseract, PaddleOCR for multilingual support
-- 📊 **Data Science Stack**: NumPy, Pandas, Scikit-learn for data analysis
-- 📈 **Visualization**: Matplotlib, Seaborn for insights
-- 🧪 **Jupyter Support**: Interactive notebooks for experimentation
+All implementations live in [`Hugging face model/`](Hugging%20face%20model/) as self-contained Jupyter notebooks.
 
-## 📄 Supported Document & Input Formats
+| Model | Task | Approach | Notebook | Docs |
+|-------|------|----------|----------|------|
+| **d4data/biomedical-ner-all** | Biomedical NER (107 entity types) | OCR → token classification | [📓 Notebook](Hugging%20face%20model/d4data%20----%20biomedical-ner-all/Clinical%20Entity%20Extraction%20using%20Biomedical%20NER.ipynb) | [📄 README](Hugging%20face%20model/d4data%20----%20biomedical-ner-all/README.md) |
+| **Davlan/xlm-roberta-large-ner-hrl** | Multilingual NER (10 languages) | OCR + Regex + NER hybrid | [📓 Notebook](Hugging%20face%20model/Davlan%20----%20xlm-roberta-large-ner-hrl/Text%20Extraction%20using%20OCR%2BRegex%2BNER%20for%20main%20data%20field.ipynb) | [📄 README](Hugging%20face%20model/Davlan%20----%20xlm-roberta-large-ner-hrl/README.md) |
+| **impira/layoutlm-document-qa** | Document QA — layout-aware | OCR + bounding boxes → QA | [📓 Notebook](Hugging%20face%20model/impira%20----%20layoutlm-document-qa/Document%20QA%20Field%20Extraction%20using%20LayoutLM.ipynb) | [📄 README](Hugging%20face%20model/impira%20----%20layoutlm-document-qa/README.md) |
+| **microsoft/layoutlmv3-base** | Document field extraction | OCR + layout encoding heuristic | [📓 Notebook](Hugging%20face%20model/microsoft%20----%20layoutlmv3-base/Layout-Aware%20Field%20Extraction%20using%20LayoutLMv3.ipynb) | [📄 README](Hugging%20face%20model/microsoft%20----%20layoutlmv3-base/README.md) |
+| **microsoft/layoutxlm-base** | Layout-aware embeddings (multilingual) | OCR + SentencePiece + spatial coords | [📓 Notebook](Hugging%20face%20model/Embedding%20Models/microsoft%20----%20layoutxlm-base%20Embedding%20models%20for%20OCR%20output/Layout-Aware%20Field%20Extraction%20using%20LayoutXLM%20%28Multilingual%29.ipynb) | [📄 README](Hugging%20face%20model/Embedding%20Models/microsoft%20----%20layoutxlm-base%20Embedding%20models%20for%20OCR%20output/README.md) |
+| **naver-clova-ix/donut-base-finetuned-docvqa** | OCR-free Document QA | Raw pixels → Swin encoder → BART decoder | [📓 Notebook](Hugging%20face%20model/naver-clova-ix%20----%20donut-base-finetuned-docvqa/Document%20Field%20Extraction%20using%20Donut%20DocVQA.ipynb) | [📄 README](Hugging%20face%20model/naver-clova-ix%20----%20donut-base-finetuned-docvqa/README.md) |
 
-### Document Types
-- **Text Documents**: .txt, .docx, .doc
-- **Images**: .png, .jpg, .jpeg, .gif, .bmp, .tiff
-- **PDFs**: Single-page and multi-page PDFs, scanned documents
-- **Structured Documents**: Forms, invoices, receipts, tables
-- **Web Content**: HTML, URLs with text extraction
+See also: [Hugging Face Models for Text & Data Extraction.md](Hugging%20face%20model/Hugging%20Face%20Models%20for%20Text%20%26%20Data%20Extraction.md) — a broader guide to free open-source models for NER, OCR, and Document AI.
 
-### Data Extraction Capabilities
-- 🔤 **Text Extraction**: Convert images/PDFs to searchable text
-- 📋 **Table Recognition**: Extract structured data from tables
-- 📑 **Layout Analysis**: Understand document structure and sections
-- 🏷️ **Entity Extraction**: Identify key information (names, dates, amounts, etc.)
-- 🔍 **Form Field Detection**: Extract values from forms and templates
-
-## 🔬 Model Exploration & Benchmarking
-
-This repository is designed to explore and benchmark multiple model architectures:
-
-| Model Category | Examples | Use Case |
-|---|---|---|
-| **NER Models** | BERT-NER, XLM-RoBERTa, Flair | Extract named entities from text |
-| **OCR Models** | Tesseract, PaddleOCR, EasyOCR, Keras-OCR | Text recognition from images |
-| **Document AI** | LayoutLM, Donut, Nougat | Understand document structure and content |
-| **Vision Transformers** | ViT, CLIP, DINOv2 | Image understanding and analysis |
-| **LLMs** | GPT, LLaMA, Mistral | Advanced text understanding and generation |
-| **Multimodal** | BLIP, LLaVA, GPT-4V | Combine image and text understanding |
-
-
-
-## 📦 Installation
-
-### Prerequisites
-- Python 3.8+
-- macOS / Linux / Windows
-- pip or conda
-
-### Setup Instructions
-
-1. **Clone the repository**
-   ```bash
-   cd /Uday Sharma/Desktop/My\ Workspace/NLP-NER-Text-Processing
-   ```
-
-2. **Create a virtual environment**
-   ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-
-3. **Install dependencies**
-   ```bash
-   # Option A: Install from requirements.in
-   pip install -r requirement.in
-
-   # Option B: Install locked requirements (recommended)
-   pip install pip-tools
-   pip-compile requirement.in
-   pip install -r requirements.txt
-   ```
-
-4. **Download spaCy model (optional)**
-   ```bash
-   python -m spacy download en_core_web_sm
-   ```
+---
 
 ## 📁 Project Structure
 
 ```
 NLP-NER-Text-Processing/
-├── README.md                          # This file
-├── LICENSE                            # Project license
-├── requirement.in                     # Python dependencies
-├── requirements.txt                   # Locked dependencies (auto-generated)
-├── .gitignore                         # Git ignore rules
-├── .venv/                             # Virtual environment
-├── Hugging face model/                # Pre-trained transformer models
-│   └── Davlan/
-│       └── xlm-roberta-large-ner-hrl/  # XLM-RoBERTa NER model
-├── SpaCy/                             # spaCy models directory
-├── models/                            # Model exploration directory
-│   ├── ner_models/                    # NER model implementations
-│   ├── ocr_models/                    # OCR model implementations
-│   ├── document_ai/                   # Document AI models (LayoutLM, Donut, etc.)
-│   └── vision_models/                 # Vision transformer models
-├── data/                              # Dataset directory
-│   ├── raw/                           # Raw text/images/PDFs
-│   ├── processed/                     # Processed outputs
-│   ├── sample_pdfs/                   # Sample PDF documents
-│   └── sample_images/                 # Sample images for OCR
-├── notebooks/                         # Jupyter notebooks for experimentation
-│   ├── model_exploration/             # Notebooks comparing different models
-│   ├── ocr_comparison.ipynb           # OCR models benchmarking
-│   ├── ner_comparison.ipynb           # NER models comparison
-│   └── document_extraction.ipynb      # Document processing examples
-├── src/                               # Source code modules
-│   ├── ner/                           # NER pipeline & model implementations
-│   ├── nlp/                           # NLP utilities
-│   ├── ocr/                           # OCR processing module
-│   ├── document_ai/                   # Document AI utilities
-│   └── utils/                         # Helper functions
-├── benchmarks/                        # Model benchmarking & results
-│   ├── results/                       # Benchmark results
-│   └── comparison_reports/            # Model comparison reports
-└── output/                            # Results and outputs
+├── README.md                                    # This file
+├── LICENSE
+├── requirements.in                              # Python dependencies
+├── requirements.txt                             # Locked dependencies (auto-generated)
+├── unlabelled_data_to_labelled_data.py          # Batch OCR → labelled CSV for ground-truth eval
+├── test_data/
+│   └── sick_notes/                              # Sample document images used for testing
+├── Hugging face model/
+│   ├── README.md                                # Model index
+│   ├── Hugging Face Models for Text & Data Extraction.md
+│   ├── d4data ---- biomedical-ner-all/
+│   ├── Davlan ---- xlm-roberta-large-ner-hrl/
+│   ├── impira ---- layoutlm-document-qa/
+│   ├── microsoft ---- layoutlmv3-base/
+│   ├── naver-clova-ix ---- donut-base-finetuned-docvqa/
+│   └── Embedding Models/
+│       └── microsoft ---- layoutxlm-base Embedding models for OCR output/
+└── SpaCy/                                       # spaCy experiments (in progress)
 ```
 
-## 🎓 Research Goals
+---
 
-This repository aims to:
-- ✅ Explore and compare **10+ different NER models** across multiple languages
-- ✅ Benchmark **5+ OCR engines** on accuracy and speed
-- ✅ Implement **Document AI solutions** for PDF extraction and form understanding
-- ✅ Create a **unified API** to work with different models interchangeably
-- ✅ Provide comprehensive **comparison benchmarks** and recommendations
-- ✅ Document best practices for **production deployments**
-- ✅ Build practical examples for **real-world use cases**
+## 🔬 Model Approach Comparison
 
-## 🗺️ Model Exploration Roadmap
+| Approach | OCR Required | Confidence Score | DocVQA F1 | Best For |
+|---|---|---|---|---|
+| OCR + Regex + NER (`Davlan`) | ✅ Tesseract | Per-entity score | — | Multilingual documents |
+| Biomedical NER (`d4data`) | ✅ Tesseract | Per-entity score | — | Clinical/medical text |
+| Layout QA v1 (`impira`) | ✅ Tesseract | ✅ Numeric 0–1 | ~70% | Forms with clear labels |
+| Layout encoding (`layoutlmv3`) | ✅ Tesseract | Proximity heuristic | — | Layout-dependent fields |
+| Layout embeddings (`layoutxlm`) | ✅ Tesseract | Token embeddings | — | Multilingual layout analysis |
+| OCR-free QA (`donut`) | ❌ None | ❌ Binary | ~84% | Clean scanned documents |
 
-### Phase 1: NER & Text Processing Models
-- [ ] BERT-based NER models
-- [ ] RoBERTa and XLM-RoBERTa variants
-- [ ] Flair NER framework
-- [ ] BioBERT for biomedical NER
-- [ ] DistilBERT (lightweight alternative)
+---
 
-### Phase 2: OCR & Character Recognition
-- [ ] Tesseract + OpenCV pipeline
-- [ ] PaddleOCR (multilingual)
-- [ ] EasyOCR comparison
-- [ ] Keras-OCR implementation
-- [ ] Handwriting recognition models
+## 📦 Installation
 
-### Phase 3: Document AI & Layout Understanding
-- [ ] LayoutLM for document understanding
-- [ ] Donut (Document Understanding Transformer)
-- [ ] Nougat (PDF to Markdown)
-- [ ] Table detection and extraction
-- [ ] Form field recognition
+**Prerequisites:** Python 3.8+, macOS / Linux / Windows
 
-### Phase 4: Vision & Multimodal Models
-- [ ] Vision Transformers (ViT)
-- [ ] CLIP for image-text matching
-- [ ] BLIP for image captioning
-- [ ] LLaVA for multimodal understanding
-- [ ] GPT-4V API integration
+```bash
+# 1. Create a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
 
-### Phase 5: Specialized & Domain Models
-- [ ] Invoice/receipt recognition
-- [ ] Contract document analysis
-- [ ] Medical document processing
-- [ ] Financial document extraction
-- [ ] Custom fine-tuned models
+# 2. Install dependencies
+pip install -r requirements.txt
 
+# 3. Tesseract OCR binary (required by most notebooks)
+brew install tesseract            # macOS
+sudo apt-get install tesseract-ocr   # Ubuntu/Debian
+# Windows: https://github.com/UB-Mannheim/tesseract/wiki
+```
 
+---
 
 ## 🚀 Quick Start
 
-### 1. Named Entity Recognition (NER)
+### Ground-truth label generation
 
-```python
-from transformers import AutoTokenizer, AutoModelForTokenClassification
-import torch
+`unlabelled_data_to_labelled_data.py` scans `test_data/sick_notes/`, runs Tesseract OCR on each file, and writes a CSV with blank label columns for manual annotation:
 
-# Load model
-model_name = "Davlan/xlm-roberta-large-ner-hrl"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForTokenClassification.from_pretrained(model_name)
-
-# Process text
-text = "John Smith works at Google in New York."
-inputs = tokenizer(text, return_tensors="pt")
-outputs = model(**inputs)
+```bash
+python unlabelled_data_to_labelled_data.py
+# → labelled_data.csv with columns: patient_name, issued_date, doctor_name, diagnosis, issuing_organization
 ```
 
-### 2. Text Processing with spaCy
+### Run a model notebook
 
-```python
-import spacy
-
-# Load spaCy model
-nlp = spacy.load("en_core_web_sm")
-
-# Process text
-doc = nlp("Apple is looking at buying U.K. startup for $1 billion")
-
-# Extract entities
-for ent in doc.ents:
-    print(f"{ent.text} - {ent.label_}")
+```bash
+jupyter notebook
+# Open Hugging face model/ and choose a notebook
 ```
 
-### 3. OCR from Images
+### NER quick example
 
 ```python
-from paddleocr import PaddleOCR
+from transformers import pipeline
 
-# Initialize OCR
-ocr = PaddleOCR(use_angle_cls=True, lang='en')
-
-# Extract text from image
-result = ocr.ocr("path/to/image.jpg", cls=True)
-for line in result:
-    for word_info in line:
-        print(word_info[1][0])  # Print recognized text
+ner = pipeline("ner", model="Davlan/xlm-roberta-large-ner-hrl", aggregation_strategy="simple")
+results = ner("John Smith was treated at City Hospital on 12 May 2024.")
+for ent in results:
+    print(ent["word"], "→", ent["entity_group"], f"({ent['score']:.2f})")
 ```
 
-### 4. Document Data Extraction from PDFs
+### Document QA quick example
 
 ```python
-from transformers import AutoProcessor, AutoModelForDocumentQuestionAnswering
-import requests
+from transformers import pipeline
 from PIL import Image
 
-# Document QA model for form understanding
-processor = AutoProcessor.from_pretrained("microsoft/layoutlm-base-uncased")
-model = AutoModelForDocumentQuestionAnswering.from_pretrained("microsoft/layoutlm-base-uncased")
-
-# Process document images
-image = Image.open("document.png")
-question = "What is the total amount?"
-encoding = processor(image, question, return_tensors="pt")
-outputs = model(**encoding)
+qa = pipeline("document-question-answering", model="impira/layoutlm-document-qa")
+image = Image.open("test_data/sick_notes/example.jpg")
+print(qa(image, "What is the patient's name?"))
+# → [{"answer": "John Smith", "score": 0.95, ...}]
 ```
 
-## 💼 Real-World Use Cases
+---
 
-This repository explores solutions for:
+## 🗺️ Roadmap
 
-1. **Invoice Processing**: Extract vendor info, amounts, dates from invoices
-2. **Resume Parsing**: Extract education, experience, skills from documents
-3. **Form Automation**: Process filled forms and extract structured data
-4. **Contract Analysis**: Identify key clauses and entities in contracts
-5. **Receipt Recognition**: Extract items and totals from receipts
-6. **Medical Records**: Extract patient info and medical codes from documents
-7. **Legal Document Review**: Identify relevant sections and extract citations
-8. **Web Scraping & OCR**: Convert web content and images to structured data
+### NER & Text Processing
+- [x] XLM-RoBERTa multilingual NER (`Davlan/xlm-roberta-large-ner-hrl`)
+- [x] Biomedical NER 107 entities (`d4data/biomedical-ner-all`)
+- [ ] spaCy pipeline experiments
+- [ ] Fine-tuned NER on sick-note ground-truth labels
 
+### Document AI & Layout Understanding
+- [x] LayoutLM v1 Document QA (`impira/layoutlm-document-qa`)
+- [x] LayoutLMv3 layout encoding (`microsoft/layoutlmv3-base`)
+- [x] LayoutXLM multilingual embeddings (`microsoft/layoutxlm-base`)
+- [x] Donut OCR-free DocVQA (`naver-clova-ix/donut-base-finetuned-docvqa`)
+- [ ] Nougat (PDF → Markdown)
+- [ ] Table detection and extraction
 
-## 📊 Data Format
+### Benchmarking
+- [x] Ground-truth label generation script (`unlabelled_data_to_labelled_data.py`)
+- [ ] Populate benchmark tables in each model README
+- [ ] Cross-model comparison report
 
-### Input
-- **Text**: Plain text files (.txt), CSV files with text columns
-- **Images**: PNG, JPG, JPEG formats for OCR
-
-### Output
-- **NER Results**: JSON with entity types and positions
-- **Text Analysis**: CSV with classifications and scores
-- **OCR Results**: Extracted text and coordinates
+---
 
 ## 🔧 Dependencies
 
-### Core Libraries
+### Core
 | Library | Purpose |
 |---------|---------|
 | `transformers` | Hugging Face transformer models |
 | `torch` | Deep learning framework |
 | `spacy` | Industrial NLP |
-| `pandas` | Data manipulation |
-| `numpy` | Numerical computing |
+| `pandas` / `numpy` | Data manipulation |
 
 ### OCR & Vision
 | Library | Purpose |
 |---------|---------|
 | `pytesseract` | OCR via Tesseract |
-| `paddleocr` | Chinese/multilingual OCR |
 | `pillow` | Image processing |
+| `opencv-python` | Image preprocessing (CLAHE, deskew) |
+| `PyMuPDF` | PDF rendering |
+| `paddleocr` | Multilingual OCR (planned) |
 
-### Advanced Models & Document AI
-| Library | Purpose |
-|---------|---------|
-| `layoutlm` | Layout-aware language models |
-| `detectron2` | Object detection (Tesseract alternative) |
-| `timm` | Vision transformers |
-| `pdf2image` | PDF to image conversion |
-
-See [requirement.in](requirement.in) for the complete dependency list.
-
-## 📝 Usage Examples
-
-### Running Notebooks
-```bash
-jupyter notebook
-# Open notebooks/ folder and select desired notebook
-```
-
-### Command Line
-```bash
-python src/ner/extract_entities.py --input data/raw/text.txt --output output/entities.json
-```
-
-## 🤝 Contributing
-
-1. Create a feature branch (`git checkout -b feature/your-feature`)
-2. Commit changes (`git commit -m 'Add feature'`)
-3. Push to branch (`git push origin feature/your-feature`)
-4. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🔗 References & Resources
-
-### Official Documentation
-- [Hugging Face Transformers](https://huggingface.co/transformers/) - Complete transformer library
-- [spaCy Documentation](https://spacy.io/) - Industrial NLP toolkit
-- [PyTorch](https://pytorch.org/) - Deep learning framework
-- [OpenCV](https://opencv.org/) - Computer vision library
-
-### Model Collections
-- [Hugging Face Model Hub](https://huggingface.co/models) - 100K+ models
-- [Paperspace Models](https://models.paperspace.com/) - Community models
-- [Model Zoo](https://modelzoo.co/) - Deep learning model collection
-
-### OCR & Document AI
-- [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) - Multilingual OCR
-- [EasyOCR](https://github.com/JaidedAI/EasyOCR) - General-purpose OCR
-- [Donut Paper](https://arxiv.org/abs/2111.15664) - Document understanding transformer
-- [LayoutLM](https://arxiv.org/abs/1912.13318) - Multimodal pre-training for layout
-
-### Research Papers
-- "Attention is All You Need" - Transformers (Vaswani et al., 2017)
-- "BERT: Pre-training of Deep Bidirectional Transformers" - (Devlin et al., 2018)
-- "LayoutLM: Pre-training of Text and Layout for Document Image Understanding" - (Xu et al., 2019)
-
-
-## ❓ FAQs
-
-**Q: How do I use a different transformer model?**  
-A: Replace the model name in code with any model from [Hugging Face Hub](https://huggingface.co/models).
-
-**Q: Can I use GPU acceleration?**  
-A: Yes! PyTorch automatically uses GPU if available. Install CUDA-compatible PyTorch for best performance.
-
-**Q: How do I add my custom data?**  
-A: Place data in `data/raw/` and create preprocessing scripts in `src/utils/`.
-
-## 📞 Support
-
-For issues and questions, please open an issue on the repository or contact the maintainers.
+See [requirements.in](requirements.in) for the full list.
 
 ---
 
-**Happy NLP Processing! 🎉**
+## 📄 License
+
+MIT — see [LICENSE](LICENSE).
+
+---
+
+## 🔗 References
+
+- [Hugging Face Model Hub](https://huggingface.co/models)
+- [LayoutLM paper](https://arxiv.org/abs/1912.13318) — Xu et al., 2019
+- [Donut paper](https://arxiv.org/abs/2111.15664) — Kim et al., 2021
+- [XLM-RoBERTa](https://arxiv.org/abs/1911.02116) — Conneau et al., 2019
+- [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)
+- [EasyOCR](https://github.com/JaidedAI/EasyOCR)

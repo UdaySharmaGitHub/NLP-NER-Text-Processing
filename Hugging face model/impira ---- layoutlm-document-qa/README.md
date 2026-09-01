@@ -2,6 +2,8 @@
 
 Extracts structured fields (patient name, doctor name, clinic name, certificate ID, issue date) from medical certificates / sick notes using the `impira/layoutlm-document-qa` model — a document understanding transformer that answers natural-language questions about a document image.
 
+---
+
 ## What the Model Does
 
 `impira/layoutlm-document-qa` is a fine-tuned **LayoutLM v1** model for **extractive document question answering**. Instead of relying on hand-written regex or a general-purpose NER model, you simply *ask a question* (e.g. *"What is the patient's name?"*) and the model returns the answer text plus a confidence score.
@@ -11,6 +13,15 @@ Extracts structured fields (patient name, doctor name, clinic name, certificate 
 2. **2D bounding boxes** for each word (layout position on the page)
 
 This means the model reasons about *where text sits on the page* (e.g. "this word is in the top-right corner, near the label 'Date:'") rather than about visual appearance. Consequently, any image preprocessing only matters insofar as it improves **Tesseract's OCR accuracy** — it does not feed into the model directly.
+
+**Comparison with other document QA models:**
+
+| Approach | OCR Required | Image Features | Confidence Score | DocVQA F1 |
+|---|---|---|---|---|
+| `impira/layoutlm-document-qa` | ✅ Tesseract | ❌ Text + bbox only | ✅ Numeric (0–1) | ~70% |
+| `naver-clova-ix/donut-base-finetuned-docvqa` | ❌ None | ✅ Raw pixels | ❌ Text only | ~84% |
+
+---
 
 ## Key Features
 
@@ -22,6 +33,8 @@ This means the model reasons about *where text sits on the page* (e.g. "this wor
 - **Two OCR preprocessing pipelines** — selectable "light" and "full" pipelines to match document quality
 - **Batch processing** — runs over an entire folder of images/PDFs and produces a pandas DataFrame + summary stats
 - **Lazy model loading** — the ~500 MB model loads once and is cached for the session
+
+---
 
 ## Two Preprocessing Pipelines
 
@@ -40,6 +53,8 @@ Set `PREPROCESSING_MODE = "light"` / `"full"` / `"none"` in the helper-functions
 |----------|-----------|-----|---------------|-----|
 | **Native PDF** (Word → PDF, digital forms) | `get_text()` > 50 chars | 150 | ❌ Skipped | Text is vector-based, always crisp |
 | **Scanned PDF** (image saved as PDF) | `get_text()` ≤ 50 chars | 300 | ✅ Selected pipeline | Image needs enhancement for OCR |
+
+---
 
 ## Architecture
 
@@ -114,20 +129,24 @@ flowchart TB
     style FULL fill:#ffccbc
 ```
 
-### Model Details
+---
 
-| Property | Value |
+## Models & Tools
+
+| Component | Details |
 |---|---|
-| Model ID | `impira/layoutlm-document-qa` |
-| Architecture | LayoutLM v1 (document understanding transformer) |
-| Pipeline type | `document-question-answering` (Hugging Face `transformers`) |
-| Input | Image (rendered to PIL) + question string |
-| Output | `{"answer": str, "score": float, "start": int, "end": int}` |
-| Size | ~500 MB |
+| **Model ID** | `impira/layoutlm-document-qa` |
+| **Architecture** | LayoutLM v1 (document understanding transformer) |
+| **Pipeline type** | `document-question-answering` (Hugging Face `transformers`) |
+| **OCR engine** | Tesseract (`pytesseract`) — called automatically by the HF pipeline |
+| **PDF rendering** | PyMuPDF (`fitz`) |
+| **Confidence threshold** | 0.3 (answers below this are discarded) |
+| **Input** | Image (rendered to PIL) + question string |
+| **Output** | `{"answer": str, "score": float, "start": int, "end": int}` |
+| **Size** | ~500 MB |
+| **License** | MIT |
 
-**Difference from a traditional OCR + NER pipeline:**
-- **OCR + NER**: Image → Tesseract text → NER model → entity extraction → post-processing rules
-- **LayoutLM QA**: Image → ask question → get answer directly (end-to-end, layout-aware)
+---
 
 ## Notebook Walkthrough
 
@@ -162,11 +181,41 @@ flowchart TB
 }
 ```
 
+### Multi-Question Strategy
+
+Each field is queried with multiple phrasing variants. All variants are tried and the answer with the **highest confidence score** is returned:
+
+```
+patient_name questions tried (all variants, best score wins):
+  1. "What is the patient's full name on this medical certificate?"  → score: 0.91
+  2. "What name appears after 'Patient Name:' or 'Patient:'?"       → score: 0.95  ✓ (highest)
+  3. "Who is the patient mentioned in this sick note?"               → score: 0.62
+  ...
+```
+
+This differs from Donut, which stops at the first non-empty answer. LayoutLM can produce numeric scores, so the best-scoring variant always wins.
+
 ### Avoiding Field Confusion
 
 Generic questions like `"What name appears after 'Name:'?"` can match either the patient or doctor section. Questions are phrased with explicit labels to disambiguate:
 - ✅ `"What name appears after 'Patient Name:' or 'Patient:'?"` → patient-specific
 - ✅ `"What name appears after 'Dr.' or 'Physician:'?"` → doctor-specific
+
+---
+
+## Benchmark Results
+
+| Field | Rate |
+|---|---|
+| `patient_name` | — |
+| `doctor_name` | — |
+| `clinic_name` | — |
+| `certificate_id` | — |
+| `issue_date` | — |
+
+> Run Step 6 of the notebook on your document set to populate this table with actual extraction rates.
+
+---
 
 ## Prerequisites
 
@@ -182,6 +231,8 @@ sudo apt-get install tesseract-ocr   # Ubuntu/Debian
 # Windows: https://github.com/UB-Mannheim/tesseract/wiki
 ```
 
+---
+
 ## Usage
 
 1. Open `Document QA Field Extraction using LayoutLM.ipynb`.
@@ -189,3 +240,12 @@ sudo apt-get install tesseract-ocr   # Ubuntu/Debian
 3. Set `PREPROCESSING_MODE` (`"light"` / `"full"` / `"none"`) in the helper-functions cell.
 4. Run Step 4 to sanity-check extraction on one image (`INSPECT_INDEX`).
 5. Run Step 5 to batch-process the whole folder, then Step 6 for summary stats.
+6. Use the Appendix cell to test custom questions (e.g. `"What is the diagnosis?"`).
+
+### First Run
+
+On the first run, the model (~500 MB) will be downloaded and cached:
+- **macOS/Linux**: `~/.cache/huggingface/hub/`
+- **Windows**: `C:\Users\<username>\.cache\huggingface\hub\`
+
+Subsequent runs reuse the cached model — no re-download.
