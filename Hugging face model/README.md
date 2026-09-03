@@ -15,4 +15,5 @@ This folder contains Jupyter notebooks demonstrating various Hugging Face models
 
 ## 📚 Additional Resources
 
+- [Model Comparison — Which model wins for zero-shot sick-note extraction?](MODEL_COMPARISON.md) — Side-by-side benchmark of all 6 models + spaCy, with a detailed explanation of why `impira/layoutlm-document-qa` is the best zero-shot choice
 - [Hugging Face Models for Text & Data Extraction](Hugging%20Face%20Models%20for%20Text%20%26%20Data%20Extraction.md) — Comprehensive guide to free, open-source models for NER, OCR, and Document AI
